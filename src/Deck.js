@@ -10,7 +10,9 @@ class Deck extends Component {
     super(props);
 
     const panResponder = PanResponder.create({
-      
+      onStartShouldSetPanResponder: () => {},
+      onPanResponderMove: () => {},
+      onPanResponderRelease: () => {},
     });
 
     this.state = { panResponder };
