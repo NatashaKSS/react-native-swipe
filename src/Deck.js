@@ -9,19 +9,22 @@ class Deck extends Component {
   constructor(props) {
     super(props);
 
+    const position = new Animated.ValueXY();
     const panResponder = PanResponder.create({
       // called when user presses on the screen that decides whether this
       // PanResponder instance should be responsible for this touch event
-      onStartShouldSetPanResponder: () => {},
+      onStartShouldSetPanResponder: () => true,
 
       // called many times as the user drags the draggable around the screen
-      onPanResponderMove: () => {},
+      onPanResponderMove: (event, gesture) => {
+        position.setValue({ x: gesture.dx, y: gesture.dy });
+      },
 
       // called when user removes touch from screen
       onPanResponderRelease: () => {},
     });
 
-    this.state = { panResponder };
+    this.state = { panResponder, position };
   }
 
   renderCards = () => {
@@ -31,10 +34,15 @@ class Deck extends Component {
   }
 
   render() {
-    return(
-      <View>
+    return (
+      // panHandlers is an object that contains different callbacks that
+      // help intercept presses from the user
+      <Animated.View
+        style={this.state.position.getLayout()}
+        {...this.state.panResponder.panHandlers}
+      >
         {this.renderCards()}
-      </View>
+      </Animated.View>
     );
   }
 }
