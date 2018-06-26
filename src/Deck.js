@@ -24,7 +24,9 @@ class Deck extends Component {
       },
 
       // called when user removes touch from screen
-      onPanResponderRelease: () => {},
+      onPanResponderRelease: () => {
+        this.resetPosition();
+      },
     });
 
     this.state = { panResponder, position };
@@ -35,13 +37,19 @@ class Deck extends Component {
     const { position } = this.state;
     const rotate = position.x.interpolate({
       inputRange: [-SCREEN_WIDTH * ROT_DAMPEN, 0, SCREEN_WIDTH * ROT_DAMPEN],
-      outputRange: ['-120deg', '0deg', '120deg']
+      outputRange: ['-120deg', '0deg', '120deg'],
     }); // linear interpolation associating dx (distance dragged) with degrees
 
     return {
       ...position.getLayout(),
-      transform: [{ rotate }]
+      transform: [{ rotate }],
     };
+  }
+
+  resetPosition() {
+    Animated.spring(this.state.position, {
+      toValue: { x: 0, y: 0 },
+    }).start();
   }
 
   renderCards = () => {
