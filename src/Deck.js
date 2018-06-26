@@ -97,7 +97,11 @@ class Deck extends Component {
     }).start(() => this.onSwipeComplete(direction));
   }
 
-  renderCards = () => {
+  renderCards() {
+    if (this.state.index >= this.props.data.length) {
+      return this.props.renderNoMoreCards();
+    }
+
     return this.props.data.map((item, i) => {
       if (i < this.state.index) {
         // Cards we've already swiped as tracked by our "index" var in state
