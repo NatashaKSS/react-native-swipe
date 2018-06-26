@@ -3,7 +3,10 @@ import {
   View,
   Animated,
   PanResponder,
+  Dimensions,
 } from 'react-native';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class Deck extends Component {
   constructor(props) {
@@ -27,8 +30,33 @@ class Deck extends Component {
     this.state = { panResponder, position };
   }
 
+  getCardStyle() {
+    const ROT_DAMPEN = 1.5; // higher === dampened & slower card rotation
+    const { position } = this.state;
+    const rotate = position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH * ROT_DAMPEN, 0, SCREEN_WIDTH * ROT_DAMPEN],
+      outputRange: ['-120deg', '0deg', '120deg']
+    }); // linear interpolation associating dx (distance dragged) with degrees
+
+    return {
+      ...position.getLayout(),
+      transform: [{ rotate }]
+    };
+  }
+
   renderCards = () => {
-    return this.props.data.map((item) => {
+    return this.props.data.map((item, index) => {
+      if (index === 0) {
+        return (
+          <Animated.View
+            key={item.id}
+            style={this.getCardStyle()}
+            {...this.state.panResponder.panHandlers}
+          >
+            {this.props.renderCard(item)}
+          </Animated.View>
+        );
+      }
       return this.props.renderCard(item);
     });
   }
@@ -37,12 +65,9 @@ class Deck extends Component {
     return (
       // panHandlers is an object that contains different callbacks that
       // help intercept presses from the user
-      <Animated.View
-        style={this.state.position.getLayout()}
-        {...this.state.panResponder.panHandlers}
-      >
+      <View>
         {this.renderCards()}
-      </Animated.View>
+      </View>
     );
   }
 }
