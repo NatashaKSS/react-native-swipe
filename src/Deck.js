@@ -4,6 +4,8 @@ import {
   Animated,
   PanResponder,
   Dimensions,
+  LayoutAnimation,
+  UIManager,
 } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -47,6 +49,15 @@ class Deck extends Component {
       position,
       index: 0,
     };
+  }
+
+  // At every update cycle, we are changing the position of our cards by
+  // 10 pixels (cascading deck effect). Hence we want to animate that change
+  // of 10 pixels
+  componentWillUpdate() {
+    // GOTCHA 2: Android compatibility issues
+    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+    LayoutAnimation.spring();
   }
 
   onSwipeComplete(direction) {
