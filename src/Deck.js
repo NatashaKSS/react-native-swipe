@@ -110,6 +110,9 @@ class Deck extends Component {
 
       if (i === this.state.index) {
         // The card that is swipable
+        // GOTCHA 1: When you promote a <View> to an <Animated.View>, React Native
+        // re-renders and thus causes the image to "flash" for a brief moment
+        // as it searches for the image URL to render.
         return (
           <Animated.View
             key={item.id}
@@ -122,10 +125,14 @@ class Deck extends Component {
       }
 
       // All other cards below the swipable one are uninteractable
+      // GOTCHA 1: So, instead of just using <View> here, we use <Animated.View>
       return (
-        <View key={item.id} style={styles.cardStyle}>
+        <Animated.View
+          key={item.id}
+          style={[styles.cardStyle, { top: 10 * (i - this.state.index) }]}
+        >
           {this.props.renderCard(item)}
-        </View>
+        </Animated.View>
       );
     }).reverse();
   }
