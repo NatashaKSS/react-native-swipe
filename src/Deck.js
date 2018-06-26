@@ -98,8 +98,14 @@ class Deck extends Component {
   }
 
   renderCards = () => {
-    return this.props.data.map((item, index) => {
-      if (index === 0) {
+    return this.props.data.map((item, i) => {
+      if (i < this.state.index) {
+        // Cards we've already swiped as tracked by our "index" var in state
+        return null;
+      }
+
+      if (i === this.state.index) {
+        // The card that is swipable
         return (
           <Animated.View
             key={item.id}
@@ -110,6 +116,8 @@ class Deck extends Component {
           </Animated.View>
         );
       }
+
+      // All other cards below the swipable one are uninteractable
       return this.props.renderCard(item);
     });
   }
