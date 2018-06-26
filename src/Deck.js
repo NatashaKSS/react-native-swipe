@@ -51,6 +51,14 @@ class Deck extends Component {
     };
   }
 
+  // Ensures that whenever the component is about to be re-rendered with a new
+  // set of props, if we receive new data, we reset state's swipable card index
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.data !== this.props.data) { // receiving new set of items
+      this.setState({ index: 0 });
+    }
+  }
+
   // At every update cycle, we are changing the position of our cards by
   // 10 pixels (cascading deck effect). Hence we want to animate that change
   // of 10 pixels
