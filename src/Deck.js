@@ -1,3 +1,7 @@
+/**
+ * Refer to React Native Advanced Concepts Sections 2 - 5 for full tutorial
+ */
+
 import React, { Component } from 'react';
 import {
   View,
